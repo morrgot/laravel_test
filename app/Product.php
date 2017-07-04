@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @package App
  *
  * @method static static find
+ *
+ * @property string $name
  */
 class Product extends Model
 {

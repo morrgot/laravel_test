@@ -11,13 +11,4 @@
 |
 */
 
-Route::get('/', 'Web\IndexController@index');
-
-Route::group(['domain' => 'api.laravel_test.dev'], function () {
-
-    Route::group(['namespace' => 'Api'], function()
-    {
-        // Контроллеры в пространстве имён "App\Http\Controllers\Api"
-        Route::get('product/add', 'ProductController@add');
-    });
-});
+Route::get('/', 'IndexController@index');

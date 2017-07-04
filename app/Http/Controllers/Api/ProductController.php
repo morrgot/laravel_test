@@ -9,26 +9,45 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Validation\ValidationException;
+use Illuminate\Http\Request;
+use App\Product;
 use \Symfony\Component\HttpKernel\Exception as HttpException;
 
 class ProductController extends Controller
 {
-    public function add()
+    public function add(Request $request)
     {
-        //print_r(get_class($this->app));
-        //return view('index', ['o' => 'product/addddd']);
-        //throw new HttpException\BadRequestHttpException('daaad');
-        $resp = ['a' => 1, 'cc' => 'aaa', 'd' => [], 'name' => 9];
-        $product = \App\Product::find(1);
+        try {
 
-        foreach ($product->vouchers()->orderBy('end', 'asc')->get() as $v) {
-            $resp['d'][] = $v->discount;
+            /** @var \Illuminate\Validation\Validator $validator */
+            $validator = \Validator::make($request->all(), [
+                'name' => 'bail|required|max:255',
+                'price' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                throw new ValidationException($validator->getMessageBag());
+            }
+
+            $product = new Product();
+
+            $product->name = $request->input('name');
+            $product->price = $request->input('price');
+
+            if(!$product->save()) {
+                throw new HttpException\HttpException(500, 'Failed to save product');
+            }
+
+        } catch (ValidationException $e) {
+            throw new HttpException\BadRequestHttpException($e->getMessageProvider()->getMessageBag()->first());
         }
 
-        $resp['sum'] = $product->totalDiscount();
+        return ['id' => $product->id];
+    }
 
-        var_dump($product->totalDiscount());
-
-        return $resp;
+    public function buy($product_id)
+    {
+        return ['id' => $product_id];
     }
 }
