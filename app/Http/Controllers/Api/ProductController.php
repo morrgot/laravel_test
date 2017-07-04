@@ -8,40 +8,33 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Exceptions\ServerErrorException;
+use App\Domain\Services\ProductService;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Http\Request;
-use App\Domain\Models\Product;
-use \Symfony\Component\HttpKernel\Exception as HttpException;
+use App\Exceptions\ServerErrorException as ServerError;
+use \Symfony\Component\HttpKernel\Exception\BadRequestHttpException as BadRequest;
 
 class ProductController extends Controller
 {
+    /**
+     * @var ProductService
+     */
+    protected $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     public function add(Request $request)
     {
-        try {
-            /** @var \Illuminate\Validation\Validator $validator */
-            $validator = \Validator::make($request->all(), [
-                'name' => 'bail|required|max:255',
-                'price' => 'required',
-            ]);
-
-            if ($validator->fails()) {
-                throw new ValidationException($validator->getMessageBag());
-            }
-
-            $product = new Product();
-
-            $product->name = $request->input('name');
-            $product->price = $request->input('price');
-            $product->active = 1;
-
-            if(!$product->save()) {
-                throw new HttpException\HttpException(500, 'Failed to save product');
-            }
-
+        try{
+            $product = $this->productService->createProduct($request->all());
         } catch (ValidationException $e) {
-            throw new HttpException\BadRequestHttpException($e->getMessageProvider()->getMessageBag()->first());
+            throw new BadRequest($e->getMessageProvider()->getMessageBag()->first());
+        } catch (\RuntimeException $e) {
+            throw new ServerError($e->getMessage());
         }
 
         return ['id' => $product->id];
@@ -49,33 +42,12 @@ class ProductController extends Controller
 
     public function buy($product_id)
     {
-        try {
-            if(!$product = Product::find($product_id)) {
-                throw new \RuntimeException('Product '.$product_id.' not found');
-            }
-
-            if(!$product->active) {
-                throw new \RuntimeException('Product '.$product_id.' is not active already');
-            }
-
-            $product->active = 0;
-
-            if(!$product->save()) {
-                throw new ServerErrorException('Failed to save product');
-            }
-
-            $vouchers = $product->vouchers()->get();
-
-            foreach ($vouchers as $voucher) {
-                $voucher->active = 0;
-
-                if(!$voucher->save()) {
-                    throw new ServerErrorException('Failed to update voucher');
-                }
-            }
-
+        try{
+            $this->productService->buyProduct($product_id);
+        } catch (\InvalidArgumentException $e) {
+            throw new BadRequest($e->getMessage());
         } catch (\RuntimeException $e) {
-            throw new HttpException\BadRequestHttpException($e->getMessage());
+            throw new ServerError($e->getMessage());
         }
 
         return ['id' => $product_id];

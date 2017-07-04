@@ -47,8 +47,8 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         /** @var HttpException $e */
-        if($this->isHttpException($e) && strpos($request->getHost(), 'api.') !== false ) {
-            $code = $e->getStatusCode();
+        if($request->ajax() || ($this->isHttpException($e) && (strpos($request->getHost(), 'api.') !== false )) ) {
+            $code = ($e instanceof HttpException) ? $e->getStatusCode() : 500;
 
             return response()->json([
                 'error' => $e->getMessage() ?: @Response::$statusTexts[$code],

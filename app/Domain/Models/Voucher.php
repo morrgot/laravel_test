@@ -2,9 +2,7 @@
 
 namespace App\Domain\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Voucher extends Model
+class Voucher extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -12,8 +10,6 @@ class Voucher extends Model
      * @var string
      */
     protected $table = 'vouchers';
-
-    public $timestamps = false;
 
     public function products()
     {

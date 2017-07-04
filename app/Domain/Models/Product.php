@@ -8,17 +8,17 @@
 
 namespace App\Domain\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Product
  * @package App
  *
- * @method static static find
  *
  * @property string $name
+ * @property int $price
+ * @property int $active
  */
-class Product extends Model
+class Product extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -26,8 +26,6 @@ class Product extends Model
      * @var string
      */
     protected $table = 'products';
-
-    public $timestamps = false;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

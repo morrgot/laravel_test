@@ -12,3 +12,5 @@
 */
 
 Route::get('/', 'IndexController@index');
+Route::post('/buy/{product_id}', 'IndexController@buy')
+    ->where(['product_id' => '[0-9]+']);
