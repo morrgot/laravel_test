@@ -154,7 +154,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        env('APP_MODULE') == 'api' ? App\Providers\ApiRouteServiceProvider::class : App\Providers\RouteServiceProvider::class,
 
     ],
 
