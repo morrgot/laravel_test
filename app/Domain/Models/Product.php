@@ -11,8 +11,7 @@ namespace App\Domain\Models;
 
 /**
  * Class Product
- * @package App
- *
+ * @package App\Domain\Models
  *
  * @property string $name
  * @property int $price

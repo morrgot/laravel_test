@@ -12,8 +12,8 @@ Route::group(['domain' => 'api.laravel_test.dev'], function () {
         ->where(['product_id' => '[0-9]+']);
 
 
-    Route::post('voucher', 'VoucherController@add');
-    Route::post('voucher/{voucher_id}/product/{product_id}', 'VoucherController@bindToProduct')
+    Route::post('voucher', 'VoucherController@create');
+    Route::post('voucher/{voucher_id}/product/{product_id}', 'VoucherController@addToProduct')
         ->where(['voucher_id' => '[0-9]+', 'product_id' => '[0-9]+']);
     Route::delete('voucher/{voucher_id}/product/{product_id}', 'VoucherController@removeFromProduct')
         ->where(['voucher_id' => '[0-9]+', 'product_id' => '[0-9]+']);

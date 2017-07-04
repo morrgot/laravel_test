@@ -2,6 +2,15 @@
 
 namespace App\Domain\Models;
 
+/**
+ * Class Voucher
+ * @package App\Domain\Models
+ *
+ * @property string $start
+ * @property string $end
+ * @property int $discount
+ * @property int $active
+ */
 class Voucher extends BaseModel
 {
     /**
@@ -10,6 +19,8 @@ class Voucher extends BaseModel
      * @var string
      */
     protected $table = 'vouchers';
+
+    public static $discounts = [10, 15, 20, 25];
 
     public function products()
     {
