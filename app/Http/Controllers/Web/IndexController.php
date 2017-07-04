@@ -9,12 +9,15 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Models\Product;
 use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {
     public function index()
     {
-        return view('index', ['o' => 'index']);
+        $products = Product::where('active', 1)->get();
+
+        return view('index', ['products' => $products]);
     }
 }

@@ -16,7 +16,6 @@
             width: 100%;
             display: table;
             font-weight: 100;
-            font-family: 'Lato';
         }
 
         .container {
@@ -38,7 +37,25 @@
 <body>
 <div class="container">
     <div class="content">
-        <div class="title">{{$o}} 5</div>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Original Price</th>
+                <th>Discount</th>
+                <th>-</th>
+            </tr>
+            @foreach ($products as $product)
+                <tr>
+                    <td>{{ $product->id }}</td>
+                    <td>{{ $product->name }}</td>
+                    <td>{{ $product->getDiscountPrice() }}</td>
+                    <td>{{ $product->price }}</td>
+                    <td>{{ $product->getTotalDiscount() }}</td>
+                </tr>
+            @endforeach
+        </table>
     </div>
 </div>
 </body>

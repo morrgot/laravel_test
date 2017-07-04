@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
-use App\Product;
-use App\Voucher;
-use Psy\Exception\RuntimeException;
+use App\Domain\Models\Product;
+use App\Domain\Models\Voucher;
 use \Symfony\Component\HttpKernel\Exception as HttpException;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\ValidationException;
@@ -39,9 +39,10 @@ class VoucherController extends Controller
             $voucher->start = $request->input('start_date');
             $voucher->end = $request->input('end_date');
             $voucher->discount = $request->input('discount');
+            $voucher->active = 1;
 
             if(!$voucher->save()) {
-                throw new HttpException\HttpException(500, 'Failed to save voucher');
+                throw new ServerErrorException('Failed to save voucher');
             }
 
         } catch (ValidationException $e) {
@@ -55,27 +56,29 @@ class VoucherController extends Controller
     {
         try {
             if(!$voucher = Voucher::find($voucher_id)){
-                throw new RuntimeException('Voucher '.$voucher_id.' not found');
+                throw new \RuntimeException('Voucher '.$voucher_id.' not found');
             }
 
             if(!$voucher->active) {
-                throw new RuntimeException('Voucher '.$voucher_id.' is not active');
+                throw new \RuntimeException('Voucher '.$voucher_id.' is not active');
             }
 
             if(!$product = Product::find($product_id)) {
-                throw new RuntimeException('Product '.$product_id.' not found');
+                throw new \RuntimeException('Product '.$product_id.' not found');
             }
 
             if(!$product->active) {
-                throw new RuntimeException('Product '.$product_id.' is not active');
+                throw new \RuntimeException('Product '.$product_id.' is not active');
             }
 
             if($product->vouchers()->where('id', $voucher_id)->get()->count() > 0) {
-                throw new RuntimeException('Voucher '.$voucher_id.' already exists for product '.$product_id);
+                throw new \RuntimeException('Voucher '.$voucher_id.' already exists for product '.$product_id);
             }
 
             $product->vouchers()->attach($voucher_id);
 
+        } catch (ValidationException $e) {
+            throw new HttpException\BadRequestHttpException($e->getMessageProvider()->getMessageBag()->first());
         } catch (\RuntimeException $e) {
             throw new HttpException\BadRequestHttpException($e->getMessage());
         }
@@ -86,20 +89,21 @@ class VoucherController extends Controller
     public function removeFromProduct($voucher_id, $product_id)
     {
         try {
+
             if(!$voucher = Voucher::find($voucher_id)){
-                throw new RuntimeException('Voucher '.$voucher_id.' not found');
+                throw new \RuntimeException('Voucher '.$voucher_id.' not found');
             }
 
             if(!$product = Product::find($product_id)) {
-                throw new RuntimeException('Product '.$product_id.' not found');
+                throw new \RuntimeException('Product '.$product_id.' not found');
             }
 
             if(!$product->active) {
-                throw new RuntimeException('Product '.$product_id.' is not active');
+                throw new \RuntimeException('Product '.$product_id.' is not active');
             }
 
             if($product->vouchers()->where('id', $voucher_id)->get()->count() < 1) {
-                throw new RuntimeException('Voucher '.$voucher_id.' does not exists for product '.$product_id);
+                throw new \RuntimeException('Voucher '.$voucher_id.' does not exists for product '.$product_id);
             }
 
             $product->vouchers()->detach($voucher_id);

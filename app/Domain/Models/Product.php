@@ -1,6 +1,12 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: morrgot
+ * Date: 04.07.2017
+ * Time: 14:56
+ */
 
-namespace App;
+namespace App\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,8 +39,13 @@ class Product extends Model
             ->where('active', 1);
     }
 
-    public function totalDiscount()
+    public function getTotalDiscount()
     {
-        return min(60, $this->vouchers()->get()->sum('discount'));
+        return min(60, $this->vouchers()->get()->sum('discount'))*0.01;
+    }
+
+    public function getDiscountPrice()
+    {
+        return $this->getTotalDiscount()>0 ? round($this->price*(1 - $this->getTotalDiscount()), 2) : $this->price;
     }
 }
