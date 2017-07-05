@@ -72,7 +72,7 @@ Id созданного продукта.
 ```
 PUT http://api.laravel_test.dev/product/{product_id}/buy
 ```
-- *{product_id}* - integer
+- **{product_id}** - integer
 
 *Success*:
 ```
@@ -99,8 +99,8 @@ Id созданного ваучера.
 ```
 POST http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
 ```
-- *{voucher_id}* - integer
-- *{product_id}* - integer
+- **{voucher_id}** - integer
+- **{product_id}** - integer
 
 *Success*:
 Пустой ответ со статусом 200.
@@ -109,8 +109,8 @@ POST http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
 ```
 DELETE http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
 ```
-- *{voucher_id}* - integer
-- *{product_id}* - integer
+- **{voucher_id}** - integer
+- **{product_id}** - integer
 
 *Success*:
 Пустой ответ со статусом 200.
