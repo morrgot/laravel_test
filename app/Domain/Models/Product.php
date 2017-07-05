@@ -31,11 +31,13 @@ class Product extends BaseModel
      */
     public function vouchers()
     {
+        $date = date('Y-m-d');
+
         return $this
             ->belongsToMany(Voucher::class, 'products2vouchers', 'product_id', 'voucher_id')
             ->where('active', 1)
-            ->where('start', '<', date('Y-m-d'))
-            ->where('end', '>', date('Y-m-d'));
+            ->where('start', '<', $date)
+            ->where('end', '>', $date);
     }
 
     public function getTotalDiscount()

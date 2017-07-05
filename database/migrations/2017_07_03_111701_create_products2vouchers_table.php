@@ -15,6 +15,8 @@ class CreateProducts2vouchersTable extends Migration
         Schema::create('products2vouchers', function (Blueprint $table) {
             $table->integer('product_id');
             $table->integer('voucher_id');
+
+            $table->primary(['product_id', 'voucher_id']);
         });
     }
 
