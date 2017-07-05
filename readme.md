@@ -46,7 +46,7 @@ sudo nginx -s reload
 `http://api.laravel_test.dev` - апи хост.
 
 АПИ возвращает JSON объекты. 
-В случае успеха возвращается статус 200 и допольнительная информация. 
+В случае успеха возвращается статус 200 и дополнительная информация. 
 
 В случае любой ошибки возвращается JSON объект с соответствующим статусом:
 ```
@@ -67,6 +67,7 @@ POST http://api.laravel_test.dev/product
 {"id": 321}
 ```
 Id созданного продукта.
+
 2. **Купить продукт**
 ```
 PUT http://api.laravel_test.dev/product/{product_id}/buy
@@ -78,6 +79,7 @@ PUT http://api.laravel_test.dev/product/{product_id}/buy
 {"id": 321}
 ```
 Id купленного продукта.
+
 3. **Создать ваучер**
 ```
 POST http://api.laravel_test.dev/voucher
@@ -92,6 +94,7 @@ POST http://api.laravel_test.dev/voucher
 {"id": 321}
 ```
 Id созданного ваучера.
+
 4. **Привязать ваучер к продукту**
 ```
 POST http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
@@ -101,6 +104,7 @@ POST http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
 
 *Success*:
 Пустой ответ со статусом 200.
+
 5. **Отвязать ваучер от продукта**
 ```
 DELETE http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
