@@ -9,10 +9,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Domain\Services\VoucherService;
-use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
-use App\Domain\Models\Product;
-use App\Domain\Models\Voucher;
 use \Symfony\Component\HttpKernel\Exception as HttpException;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\ValidationException;

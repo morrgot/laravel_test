@@ -24,7 +24,7 @@ php artisan migrate:refresh --seed
 ```bash
 sudo ln -s /var/www/laravel_test/laravel.conf /etc/nginx/sites-enabled/laravel.conf
 # Либо просто скопировать
-sudo сз /var/www/laravel_test/laravel.conf /etc/nginx/sites-enabled/laravel.conf
+sudo cp /var/www/laravel_test/laravel.conf /etc/nginx/sites-enabled/laravel.conf
 ```
 6. В nginx конфиге правим переменную `$root`, в которой указываем путь к директории с входным скриптом
 ```
@@ -42,4 +42,71 @@ sudo nginx -s reload
  ```
 8. Готово! Можно заходить на `http://laravel_test.dev`.
 
+## REST API
+`http://api.laravel_test.dev` - апи хост.
 
+АПИ возвращает JSON объекты. 
+В случае успеха возвращается статус 200 и допольнительная информация. 
+
+В случае любой ошибки возвращается JSON объект с соответствующим статусом:
+```
+{"error": "Product 13 not found", "code": 400}
+```
+
+### Endpoints:
+1. **Создать продукт**:
+```
+POST http://api.laravel_test.dev/product
+```
+В POST передаем название и цену:
+- **name** - string;
+- **price** - integer.
+
+*Success*:
+```
+{"id": 321}
+```
+Id созданного продукта.
+2. **Купить продукт**
+```
+PUT http://api.laravel_test.dev/product/{product_id}/buy
+```
+- *{product_id}* - integer
+
+*Success*:
+```
+{"id": 321}
+```
+Id купленного продукта.
+3. **Создать ваучер**
+```
+POST http://api.laravel_test.dev/voucher
+```
+В POST передаем название и цену:
+- **start_date** - string, дата в формате "Y-m-d";
+- **end_date** - string, дата в формате "Y-m-d";
+- **discount** - integer. Может принимать значения - [10, 15, 20, 25].
+
+*Success*:
+```
+{"id": 321}
+```
+Id созданного ваучера.
+4. **Привязать ваучер к продукту**
+```
+POST http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
+```
+- *{voucher_id}* - integer
+- *{product_id}* - integer
+
+*Success*:
+Пустой ответ со статусом 200.
+5. **Отвязать ваучер от продукта**
+```
+DELETE http://api.laravel_test.dev/voucher/{voucher_id}/product/{product_id}
+```
+- *{voucher_id}* - integer
+- *{product_id}* - integer
+
+*Success*:
+Пустой ответ со статусом 200.

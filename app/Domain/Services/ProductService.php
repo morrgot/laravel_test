@@ -25,8 +25,8 @@ class ProductService
     {
         /** @var \Illuminate\Validation\Validator $validator */
         $validator = \Validator::make($data, [
-            'name' => 'bail|required|max:255    ',
-            'price' => 'required|integer',
+            'name' => 'bail|required|max:255',
+            'price' => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
