@@ -1,27 +1,45 @@
-# Laravel PHP Framework
+## Get Started
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+Предполагается, что запускаемся за Linux машине, на которой имеются:
+* Имеется PHP >= 5.5.9
+* БД MySQL
+* Есть сервер Nginx
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+### Инструкция
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+1. Зайти в директорию проекта.
+```bash
+cd /path/to/laravel_test
+```
+2. Скачиваем все необходимые пакеты composer-ом
+```bash
+php composer.phar install
+```
+3. В Mysql создаем базу "laravel_test" (CREATE DATABASE laravel_test;). В конфигурации БД используется "стандартный" пользователь root с пустым паролем, так что если надо - не забываем это подправить в `laravel_test/config/database.php`
+4. Запускаем миграции и сиды
+```bash
+php artisan migrate:refresh --seed
+```
+5. Nginx конфиг лежит в корне - `laravel_test/laravel.conf`. Его необходимо добавить к остальным конфигам.
+```bash
+sudo ln -s /var/www/laravel_test/laravel.conf /etc/nginx/sites-enabled/laravel.conf
+# Либо просто скопировать
+sudo сз /var/www/laravel_test/laravel.conf /etc/nginx/sites-enabled/laravel.conf
+```
+6. В nginx конфиге правим переменную `$root`, в которой указываем путь к директории с входным скриптом
+```
+set $root /var/www/laravel_test; # Меняем на свой /path/to/laravel_test
+root $root;
+```
+7. Перезапускаем nginx.
+```bash
+sudo nginx -t
+sudo nginx -s reload
+```
+ А, ну и не забываем в прописать себе в хостах c IP вашей виртуальной машины! У меня так:
+ ```
+ 10.10.20.16 laravel_test.dev api.laravel_test.dev
+ ```
+8. Готово! Можно заходить на `http://laravel_test.dev`.
 
-## Official Documentation
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
